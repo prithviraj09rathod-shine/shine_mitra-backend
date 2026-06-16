@@ -14,7 +14,7 @@ app.use(helmet());
 // ── CORS: only allow your frontend domain ────────────────────────────────────
 const allowedOrigins = process.env.ALLOWED_ORIGIN
   ? process.env.ALLOWED_ORIGIN.split(',').map(o => o.trim())
-  : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5500'];
+  : ['http://localhost:3000', 'http://localhost:5173','https://mitra-frontend-inky.vercel.app', 'http://127.0.0.1:5500'];
 
 app.use(cors({
   origin: (origin, cb) => {
