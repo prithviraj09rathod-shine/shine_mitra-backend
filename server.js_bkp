@@ -14,13 +14,11 @@ app.use(helmet());
 // ── CORS: only allow your frontend domain ────────────────────────────────────
 const allowedOrigins = process.env.ALLOWED_ORIGIN
   ? process.env.ALLOWED_ORIGIN.split(',').map(o => o.trim())
-  : ['http://localhost:3000', 'http://localhost:5173', 'https://mitra-frontend-inky.vercel.app', 'http://127.0.0.1:5500'];
+  : ['http://localhost:3000', 'http://localhost:5173','https://mitra-frontend-inky.vercel.app', 'http://127.0.0.1:5500'];
 
 app.use(cors({
   origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
-      return cb(null, true);
-    }
+    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
     cb(new Error('Not allowed by CORS'));
   },
   methods: ['POST', 'GET'],
@@ -117,7 +115,7 @@ app.post('/api/mitra', async (req, res) => {
 
   try {
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 600,
       system: buildSystemPrompt(ageGroup, ageName || ageGroup),
       messages
@@ -137,7 +135,7 @@ app.post('/api/mitra', async (req, res) => {
     });
 
   } catch (err) {
-    console.error('Anthropic API error:', JSON.stringify(err.error || err.message || err));
+    console.error('Anthropic API error:', err.message);
     if (err.status === 429) {
       return res.status(429).json({ error: 'Service is busy. Please try in a moment.' });
     }
