@@ -40,6 +40,30 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
+// ── Mood detection from user message ─────────────────────────────────────────
+// Returns a mood keyword used by the frontend to show a contextual image.
+// Keyword-matching is fast, free, and reliable enough for this purpose.
+function detectMood(message) {
+  const m = message.toLowerCase();
+
+  if (/scared|fear|anxi|panic|worry|stress|overwhelm|nervous|terrified|dread/.test(m))
+    return 'calm';
+
+  if (/fail|reject|loser|mistake|disappoint|can't do|cannot do|not good enough|giving up|hopeless/.test(m))
+    return 'courage';
+
+  if (/family|parent|mom|dad|mother|father|home|fight|conflict|argument|brother|sister/.test(m))
+    return 'strength';
+
+  if (/lonely|alone|purpose|meaning|lost|don't belong|dont belong|no friends|isolated|worthless/.test(m))
+    return 'hope';
+
+  if (/right|wrong|dilemma|pressure|peer|should i|what to do|cheating|lying|unfair|justice/.test(m))
+    return 'wisdom';
+
+  return 'growth';
+}
+
 // ── Mitra system prompt builder ──────────────────────────────────────────────
 function buildSystemPrompt(ageGroup, ageName) {
   const toneGuide = {
@@ -129,8 +153,12 @@ app.post('/api/mitra', async (req, res) => {
       .map(b => b.text)
       .join('');
 
+    // Detect mood from the user's message for frontend visual
+    const mood = detectMood(message.trim());
+
     res.json({
       reply,
+      mood,
       usage: {
         inputTokens: response.usage.input_tokens,
         outputTokens: response.usage.output_tokens
@@ -148,7 +176,7 @@ app.post('/api/mitra', async (req, res) => {
 
 // ── Health check ──────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', name: 'Mitra API', version: '1.0.0' });
+  res.json({ status: 'ok', name: 'Mitra API', version: '1.1.0' });
 });
 
 // ── 404 handler ───────────────────────────────────────────────────────────────
