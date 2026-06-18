@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const Anthropic = require('@anthropic-ai/sdk');
 
 const app = express();
+app.set('trust proxy', 1);
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 // ── Security headers ──────────────────────────────────────────────────────────
