@@ -1,0 +1,24 @@
+# Copy this file to .env and fill in your values
+# NEVER commit .env to git
+
+ANTHROPIC_API_KEY=sk-ant-your-key-here
+PORT=3001
+NODE_ENV=production
+
+# Optional: Restrict which frontend domains can call your API
+# Leave blank to allow all (fine for development)
+ALLOWED_ORIGIN=https://your-app-name.vercel.app
+
+# ── Supabase (for teen & adult account features only) ─────────────────────────
+# Get these from your Supabase project → Settings → API
+# SUPABASE_URL is the same value used in the frontend.
+# SUPABASE_SERVICE_ROLE_KEY is SECRET — backend only, never put this in
+# index.html or any frontend code. It has full admin access to your database.
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
+
+# ── ElevenLabs (for human-quality voice audio replies) ────────────────────────
+# Get your API key at https://elevenlabs.io → Profile → API Key
+# Free tier: 10,000 characters/month (~30-40 full Mitra conversations)
+# Only used when the user has the voice toggle ON — no cost for text-only users
+ELEVENLABS_API_KEY=your-elevenlabs-api-key-here
