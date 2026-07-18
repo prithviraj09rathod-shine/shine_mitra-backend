@@ -62,7 +62,7 @@ function buildSystemPrompt(ageGroup, ageName) {
     teen:  'Be real and honest. No lecturing. Like a cool mentor who genuinely gets it. Acknowledge their world.',
     adult: 'Thoughtful, deep, philosophical when fitting. Full respect for their complexity and lived experience.'
   };
-  return `You are Sakhi — a deeply caring, wise companion who responds like the best combination of a trusted best friend, a loving parent, and a gentle teacher. You never judge. You always understand first, always answer from the heart.
+  return `You are Mitra — a deeply caring, wise companion who responds like the best combination of a trusted best friend, a loving parent, and a gentle teacher. You never judge. You always understand first, always answer from the heart.
 
 The user is: ${ageName} (age group: ${ageGroup}).
 Tone guide for this age: ${toneGuide[ageGroup] || toneGuide.adult}
@@ -94,7 +94,7 @@ ABSOLUTE RULES:
 - Always end on hope`;
 }
 
-// ── POST /api/mitra (kept as /api/mitra for backwards compat) ───────────────────
+// ── POST /api/mitra ───────────────────────────────────────────────────────────
 app.post('/api/mitra', async (req, res) => {
   const { message, ageGroup, ageName, history, voiceEnabled } = req.body;
   if (!message || typeof message !== 'string' || message.trim().length === 0)
@@ -127,7 +127,7 @@ app.post('/api/mitra', async (req, res) => {
     const elevenKey = process.env.ELEVENLABS_API_KEY;
     if (voiceEnabled && elevenKey) {
       try {
-        // Voice IDs — pick the one that fits Sakhi's persona best.
+        // Voice IDs — pick the one that fits Mitra's persona best.
         // "Aria" (21m00Tcm4TlvDq8ikWAM) is warm and calm.
         // "Matilda" (XrExE9yKIg1WjnnlVkGX) is gentle and caring — ideal for kids.
         // You can preview all voices at elevenlabs.io/voice-lab and swap the ID here.
@@ -160,9 +160,9 @@ app.post('/api/mitra', async (req, res) => {
         if (ttsRes.ok) {
           // Stream audio directly back to the browser — no temp file needed
           res.setHeader('Content-Type', 'audio/mpeg');
-          res.setHeader('X-Sakhi-Reply', encodeURIComponent(reply));
-          res.setHeader('X-Sakhi-Mood', mood);
-          res.setHeader('Access-Control-Expose-Headers', 'X-Sakhi-Reply, X-Sakhi-Mood');
+          res.setHeader('X-Mitra-Reply', encodeURIComponent(reply));
+          res.setHeader('X-Mitra-Mood', mood);
+          res.setHeader('Access-Control-Expose-Headers', 'X-Mitra-Reply, X-Mitra-Mood');
           return ttsRes.body.pipeTo(
             new WritableStream({
               write(chunk) { res.write(chunk); },
@@ -186,11 +186,11 @@ app.post('/api/mitra', async (req, res) => {
   } catch (err) {
     console.error('Anthropic API error:', JSON.stringify(err.error || err.message || err));
     if (err.status === 429) return res.status(429).json({ error: 'Service is busy. Please try in a moment.' });
-    res.status(500).json({ error: 'Sakhi is temporarily unavailable. Please try again.' });
+    res.status(500).json({ error: 'Mitra is temporarily unavailable. Please try again.' });
   }
 });
 
-app.get('/api/health', (req, res) => res.json({ status:'ok', name:'Sakhi API', version:'1.4.0' }));
+app.get('/api/health', (req, res) => res.json({ status:'ok', name:'Mitra API', version:'1.4.0' }));
 
 // ── DELETE /api/account — full account deletion ───────────────────────────────
 // Requires the user's own Supabase access token in the Authorization header.
@@ -232,4 +232,4 @@ app.use((req, res) => res.status(404).json({ error: 'Not found' }));
 app.use((err, req, res, next) => { console.error(err.stack); res.status(500).json({ error: 'Internal server error' }); });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`🌸 Sakhi backend running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🪔 Mitra backend running on port ${PORT}`));

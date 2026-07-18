@@ -1,7 +1,7 @@
 {
-  "name": "sakhi-backend",
+  "name": "mitra-backend",
   "version": "1.0.0",
-  "description": "Sakhi AI Companion - Backend API",
+  "description": "Mitra AI Companion - Backend API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
